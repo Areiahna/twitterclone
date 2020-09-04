@@ -1,0 +1,6 @@
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Submit">
+    <h3>New user? Signup <a href="/adduser/">Here</a></h3>
+</form>
