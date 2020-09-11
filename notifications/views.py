@@ -19,8 +19,3 @@ def notification_view(request):
         tagged_user=request.user).count()
 
     return render(request, "notification_detail.html", {"notifications": notications, "count": count})
-
-
-def clear_notifications(request):
-    Notification.objects.filter(tagged_user=request.user).delete()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', "/"))
