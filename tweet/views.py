@@ -2,8 +2,8 @@ from django.shortcuts import render, HttpResponseRedirect, reverse
 from django.contrib.auth.decorators import login_required
 from tweet.models import Tweet
 from twitteruser.models import MyUser
+from notifications.models import Notification
 from tweet.forms import AddTweetForm
-
 # Create your views here.
 
 
@@ -15,11 +15,27 @@ def create_tweet(request, user_username):
         form = AddTweetForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            Tweet.objects.create(
+            new_tweet = Tweet.objects.create(
                 text=data.get('text'),
                 author=userobj,
             )
-            return HttpResponseRedirect(reverse("homepage"))
+            new_tweet.save()
+
+            tweet_text = data['text']
+            tweet_text.lower()
+            split_tweet = tweet_text.split()
+            for word in split_tweet:
+                if "@" in word:
+                    username = word[1:]
+                    target_user = MyUser.objects.filter(
+                        username=username).first()
+                    if target_user.username.lower() == username:
+                        Notification.objects.create(
+                            tagged_user=target_user,
+                            tweet=new_tweet
+                        )
+
+        return HttpResponseRedirect(reverse("homepage"))
 
     form = AddTweetForm()
     return render(request, "addtweet.html", {"form": form})

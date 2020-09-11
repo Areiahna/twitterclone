@@ -16,7 +16,7 @@ def create_user(request):
             return HttpResponseRedirect(reverse("homepage"))
 
     form = AddUserForm
-    return render(request, "generic_form.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 
 def login_view(request):

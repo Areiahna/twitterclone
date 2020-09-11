@@ -6,6 +6,7 @@ from django.contrib.auth.models import AbstractUser
 
 class MyUser(AbstractUser):
     display_name = models.CharField(max_length=40, blank=True, unique=True)
+    followers = models.ManyToManyField("self", symmetrical=False)
     REQUIRED_FIELDS = ['display_name']
 
     def __str__(self):

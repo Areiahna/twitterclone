@@ -1,9 +1,10 @@
 <h2>{{user}}</h2>
 <h2>@{{user.username}}</h2>
 <h2>Tweets: {{count}}</h2>
-<h2>Following: (# of followers)</h2>
+<h2>Following: {{follower_count}}</h2>
 <button><a href="/">Home</a></button>
-<button><a href="/">Notifications:</a></button>
+<button><a href="/follow/{{user.username}}/">{{button_display}}</a></button>
+<button><a href="/notifications">Notifications:{{notify_count}}</a></button>
 <button><a href="/addtweet/{{request.user.username}}">Submit a Tweet</a></button>
 <button><a href="/logout/">Logout</a></button>
 <hr>

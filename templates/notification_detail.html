@@ -1,0 +1,26 @@
+<h2>{{request.user.display_name}}</h2>
+<h2>@{{request.user.username}}</h2>
+<button><a href="/">Home</a></button>
+<button><a href="/{{request.user.username}}">Profile</a></button>
+<button><a href="/notifications/">Notifications:{{count}}</a></button>
+<button><a href="/addtweet/{{request.user.username}}">Submit a Tweet</a></button>
+<button><a href="/logout/">Logout</a></button>
+<hr>
+
+{% for notification in notifications %}
+<ul>
+    <li>
+        <h3><a href="/{{notification.tweet.author.username}}">@{{notification.tweet.author.username}}</a> -
+            {{notification.tweet.post_date}}
+        </h3>
+        <ul>
+            <h3>
+                <li>{{notification.tweet}}</li>
+            </h3>
+        </ul>
+
+
+    </li>
+
+</ul>
+{% endfor %}
