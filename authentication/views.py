@@ -3,10 +3,15 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from twitteruser.models import MyUser
 from authentication.forms import LoginForm, AddUserForm
+from django.views.generic import TemplateView
 
 
-def create_user(request):
-    if request.method == "POST":
+class CreateUser(TemplateView):
+    def get(self, request):
+        form = AddUserForm
+        return render(request, "signup.html", {"form": form})
+
+    def post(self, request):
         form = AddUserForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
@@ -14,9 +19,6 @@ def create_user(request):
                 "username"), password=data.get("password"), display_name=data.get("display_name"))
 
             return HttpResponseRedirect(reverse("homepage"))
-
-    form = AddUserForm
-    return render(request, "signup.html", {"form": form})
 
 
 def login_view(request):
@@ -37,3 +39,17 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse("homepage"))
+
+
+# def create_user(request):
+#     if request.method == "POST":
+#         form = AddUserForm(request.POST)
+#         if form.is_valid():
+#             data = form.cleaned_data
+#             MyUser.objects.create_user(username=data.get(
+#                 "username"), password=data.get("password"), display_name=data.get("display_name"))
+
+#             return HttpResponseRedirect(reverse("homepage"))
+
+#     form = AddUserForm
+#     return render(request, "signup.html", {"form": form})

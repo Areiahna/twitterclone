@@ -21,13 +21,13 @@ import authentication.views
 import notifications.views
 
 urlpatterns = [
-    path('', views.index_views, name="homepage"),
+    path('', views.IndexView.as_view(), name="homepage"),
     path('login/', authentication.views.login_view, name="login"),
     path('logout/', authentication.views.logout_view, name="logout"),
-    path('adduser/', authentication.views.create_user, name="adduser"),
-    path('notifications/', notifications.views.notification_view),
+    path('adduser/', authentication.views.CreateUser.as_view(), name="adduser"),
+    path('notifications/', notifications.views.NotificationView.as_view()),
     path('addtweet/<str:user_username>/',
-         tweet.views.create_tweet, name="addtweet"),
+         tweet.views.CreateTweet.as_view(), name="addtweet"),
     path('tweet/<int:tweet_id>/', tweet.views.tweetdetail_view, name="tweetdetail"),
     path('follow/<str:user_username>/', views.follow_user),
     path('admin/', admin.site.urls),
