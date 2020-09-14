@@ -3,21 +3,38 @@ from twitteruser.models import MyUser
 from django.contrib.auth.decorators import login_required
 from tweet.models import Tweet
 from notifications.models import Notification
+from django.views.generic import TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-@login_required
-def index_views(request):
-    # RECIEVED HELP FROM PAUL R
-    my_user = MyUser.objects.filter(username=request.user.username).first()
-    follower_tweet = Tweet.objects.filter(
-        author__in=request.user.followers.all())
-    user_tweets = Tweet.objects.filter(author=request.user).all()
-    all_tweets = follower_tweet | user_tweets
-    all_tweets = all_tweets.order_by('-post_date')
-    user_notications = Notification.objects.filter(
-        tagged_user=request.user).all()
-    notifications = user_notications.count()
-    return render(request, "index.html", {"users": my_user, "tweets": all_tweets, "count": notifications})
+# @login_required
+# def index_views(request):
+#     # RECIEVED HELP FROM PAUL R
+#     my_user = MyUser.objects.filter(username=request.user.username).first()
+#     follower_tweet = Tweet.objects.filter(
+#         author__in=request.user.followers.all())
+#     user_tweets = Tweet.objects.filter(author=request.user).all()
+#     all_tweets = follower_tweet | user_tweets
+#     all_tweets = all_tweets.order_by('-post_date')
+#     user_notications = Notification.objects.filter(
+#         tagged_user=request.user).all()
+#     notifications = user_notications.count()
+#     return render(request, "index.html", {"users": my_user, "tweets": all_tweets, "count": notifications})
+
+class IndexView(LoginRequiredMixin, TemplateView):
+
+    def get(self, request):
+        # RECIEVED HELP FROM PAUL R
+        my_user = MyUser.objects.filter(username=request.user.username).first()
+        follower_tweet = Tweet.objects.filter(
+            author__in=request.user.followers.all())
+        user_tweets = Tweet.objects.filter(author=request.user).all()
+        all_tweets = follower_tweet | user_tweets
+        all_tweets = all_tweets.order_by('-post_date')
+        user_notications = Notification.objects.filter(
+            tagged_user=request.user).all()
+        notifications = user_notications.count()
+        return render(request, "index.html", {"users": my_user, "tweets": all_tweets, "count": notifications})
 
 
 def userdetail_view(request, user_username):
